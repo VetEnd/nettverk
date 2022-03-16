@@ -1,7 +1,7 @@
 #client.py
-from asyncio.windows_events import NULL
-import socket
 import threading
+import _thread
+import socket
 nickname = input("Choose your nickname : ").strip()
 while not nickname:
     nickname = input("Your nickname should not be empty : ").strip()
@@ -10,20 +10,30 @@ host = "localhost" # "127.0.1.1"
 port = 5000
 my_socket.connect((host, port))
 
-def recv_thread():
-     message = my_socket.recv(1024).decode()
-     print(message)
+#This part of the code will just be definitions of the chat bots
 
-thread_receive = threading.Thread(target=recv_thread)
+class thread (threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
 
+    def run(self):
+        i=0
+        while i<=10:
+            message = my_socket.recv(1024).decode()
+            print(message)
 
-
-
-while True: 
+# funker
+def send_msg():
+    while True: 
         message_to_send = input()
         my_socket.send(message_to_send.encode())
-        thread_receive.start()
-    
+
+recv = thread()
+recv.start()
+
+#funker
+send_msg()
+
            
            
      
