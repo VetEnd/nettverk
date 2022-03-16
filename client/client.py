@@ -1,15 +1,33 @@
+
+from concurrent.futures import thread
 import socket #Imports the libary for socket'
 import sys
+import _thread
+import threading
 
-Host = sys.argv[1]
-temp = sys.argv[2]
-Port = int(temp)
+Host = input(str("IP addresse:"))
 
-Bot_name = sys.argv [3]
+Port = 5000
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.connect ((Host, Port))
-    s.sendall(b"Hello, world")
-    data = s.recv(1024)
+name = input(str("Please enter your username: "))
 
-print (f"Receviced {data!r}")
+
+conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+conn.connect ((Host, Port))
+
+print ("Connect to server")
+
+def send_thread():
+    while True:
+        message = input()
+        if message:
+            message_name = name + " : " + message
+            conn.send(message.encode())
+
+def recv_thread():
+    while True:
+        message = conn.recv(1024).decode()
+        print (message)
+
+threading.Thread(target=send_thread).start()
+threading.Thread(target=recv_thread).start()
