@@ -1,10 +1,11 @@
 #client.py
+from multiprocessing.connection import wait
 import threading
 import _thread
 import socket
-nickname = input("Choose your nickname : ").strip()
-while not nickname:
-    nickname = input("Your nickname should not be empty : ").strip()
+from time import sleep
+name = input("Choose your nickname : ").strip()
+
 my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = "localhost" # "127.0.1.1"
 port = 5000
@@ -26,13 +27,20 @@ class thread (threading.Thread):
 def send_msg():
     while True: 
         message_to_send = input()
-        my_socket.send(message_to_send.encode())
+        message_navn = name + ": " + message_to_send
+        my_socket.send(message_navn.encode())
 
-recv = thread()
-recv.start()
-
-#funker
-send_msg()
+if name == "Stian":
+    message = "Hei, mitt navn er Stian"
+    my_socket.send(message.encode())
+    sleep(5)
+    message = "Ok, du er teit"
+    my_socket.send(message.encode())
+else:
+    recv = thread()
+    recv.start()
+    #funker
+    send_msg()
 
            
            
