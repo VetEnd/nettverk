@@ -1,15 +1,23 @@
 #client.py
-from multiprocessing.connection import wait
+from cgi import print_arguments
 import threading
-import _thread
 import socket
 from time import sleep
 name = input("Choose your nickname : ").strip()
 
 my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-host = "localhost" # "127.0.1.1"
-port = 5000
+
+print("Type inn IP address: ")
+host = input(str("IP address: "))
+
+print("Type inn port")
+port = int (input(str("Port: ")))
+
+print("Connecting to server")
 my_socket.connect((host, port))
+
+conned = my_socket.recv(1024).decode()
+print(conned)
 
 #This part of the code will just be definitions of the chat bots
 
