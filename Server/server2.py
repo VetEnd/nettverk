@@ -7,6 +7,7 @@ from queue import Queue
 
 import socket
 import threading
+from tkinter import Y
 
 
 my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -15,12 +16,27 @@ print("Welcome to S354418's server. Follow the instructions below")
 print("To write a message to the users, just type in the command line")
 print("To get help just type --help")
 print("Please follow the instructions to start the server, enjoy!")
+print("Do you wanna define the IP and Port yourself? Y/N")
+kult = input(str("Y/N: "))
+def auto():
 
-print("Choose the host ip address: ")
-host = input(str("IP address: "))
+    if kult == "Y":
+        print("Choose the host ip address: ")
+        host = input(str("IP address: "))
 
-print("Choose the host port: ")
-port = int (input(str("Port: ")))
+        print("Choose the host port: ")
+        port = int (input(str("Port: ")))
+        return host, port
+    elif kult == "N":
+        print("Set host to localhost and port to 5000")
+        host = "127.0.0.1"
+        port = 5000
+        return host, port
+    else:
+        print("Please enter either Y or N")
+        auto()
+
+auto()
 
 broadcast_list = []
 
