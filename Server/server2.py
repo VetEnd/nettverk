@@ -1,10 +1,5 @@
 #server.py
-
-
-
-
 from queue import Queue
-
 import socket
 import threading
 from tkinter import Y
@@ -63,10 +58,9 @@ e = threading.Event()
 def listen_ok():
     i= 0
     while i <=10:
-        
         my_socket.listen()
         conn, addr = my_socket.accept()
-        conned = "Connected to the Server! This is your addr"
+        conned = "Connected to the Server!"
         conn.send(conned.encode())
         broadcast_list.append(conn)
         ok.put(conn)
@@ -93,8 +87,23 @@ def meld():
     i = 0
     while i <= 10:
         hei = input(str("Skriv noe:"))
-        message = "Host: " + hei
-        broadcast(message)
+        if hei == "--help":
+            print("Liste med kommandoer (Kick, exit restart?)")
+        elif hei =="--kick":
+            print("Which of these would you like to kick?")
+            print(broadcast_list)
+            print("The next line you write will kick the person")
+            kick_client = input(str(""))
+        elif hei == "--exit":
+            print("Kicking all clients, and shuting down")
+            #Kicker
+            print("All clients kicked")
+            print("Shuting down..")
+            #Shutdown
+        
+        else:
+            message = "Host: " + hei
+            broadcast(message)
     
 def thread_starter():
     listen_thread = threading.Thread(target=listen_ok)
