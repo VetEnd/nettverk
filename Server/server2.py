@@ -18,31 +18,38 @@ print("To get help just type --help")
 print("Please follow the instructions to start the server, enjoy!")
 print("Do you wanna define the IP and Port yourself? Y/N")
 
-test = Queue()
+host_q = Queue()
+port_q = Queue()
 
-def auto():
-    kult = input(str("Y/N: "))
-    if kult == "Y":
+def check():
+    check_input = input(str("Y/N: "))
+    if check_input == "Y" or "y" or "Yes" or "YEs" or "YES" or "yes" or "yEs" or "yeS" or "YeS":
         print("Choose the host ip address: ")
-        host = input(str("IP address: "))
+        host_input = input(str("IP address: "))
+        port_q.put(host_input)
 
         print("Choose the host port: ")
-        port = int (input(str("Port: ")))
-        
+        port_input = int (input(str("Port: ")))
+        port_q.put(port_input)
         
 
-    elif kult == "N":
+    elif check_input == "N" or "n" or "NO" or "No" or "no" or "nO":
         print("Set host to localhost and port to 5000")
         host = "127.0.0.1"
         port = 5000
-        
+        host_q.put(host)
+        port_q.put(port)
     else:
         print("Please enter either Y or N")
-        auto()
+        check()
 
-auto()
+check()
+
 
 broadcast_list = []
+
+host = host_q.get()
+port = port_q.get()
 
 print("Starting Server...")
 my_socket.bind((host, port))       
@@ -121,11 +128,4 @@ print("Server started")
 
 #You are free to decide when and how to disconnect the clients (you can
 #even kick them out if they misbehave) and how to gracefully terminate the program. 
-
-#Make a "bot" that takes its response from the command line. That way you
-#or other users can interact with the bots and make the dialogue more interesting.
-
-#Don't nag your users. It's sometimes nice to let the user add choices and
-#options, but your defaults should work well without user interaction. Don't make them fill out 
-#forms. 
 
