@@ -74,7 +74,7 @@ def msg():
         message = test.recv(1024).decode()
         send_message = name +": " + message
         if message == "exit": 
-            my_socket.close()
+            test.close()
             break
         else:
             print(f"Received message: " + send_message)
@@ -83,8 +83,10 @@ def msg():
 #Mangler FIKS
 def broadcast(message):
     for client in broadcast_list:
-        client.send(message.encode())
-
+        try:
+            client.send(message.encode())
+        except:
+            broadcast_list.remove(client)
 def meld():
     i = 0
     while i <= 10:
@@ -137,6 +139,7 @@ print("Server started")
 #still connected before trying to interact with them. If they're not, or if you decide that they're 
 #taking too long to respond, you can remove them from the list of connections. 
 
-#You are free to decide when and how to disconnect the clients (you can
-#even kick them out if they misbehave) and how to gracefully terminate the program. 
+#Funker halveis fullfører hvis man får tid
+
+ #(you can even kick them out if they misbehave) and how to gracefully terminate the program. 
 

@@ -6,22 +6,22 @@ from time import sleep
 name = input("Choose your nickname : ").strip()
 
 my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+def start():
+    print("Type inn IP address: ")
+    host = input(str("IP address: "))
 
-print("Type inn IP address: ")
-host = input(str("IP address: "))
+    print("Type inn port")
+    port = int (input(str("Port: ")))
 
-print("Type inn port")
-port = int (input(str("Port: ")))
+    print("Connecting to server")
+    my_socket.connect((host, port))
 
-print("Connecting to server")
-my_socket.connect((host, port))
+    conned = my_socket.recv(1024).decode()
+    print(conned)
 
-conned = my_socket.recv(1024).decode()
-print(conned)
-
-name_send = my_socket.send(name.encode())
+    name_send = my_socket.send(name.encode())
 #This part of the code will just be definitions of the chat bots
-
+start()
 class thread (threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
@@ -38,6 +38,8 @@ def send_msg():
         message_to_send = input()
         message_navn = message_to_send
         my_socket.send(message_navn.encode())
+        if message_to_send == "exit":
+            my_socket.close()
 
 if name == "Stian":
     message = "Hei, mitt navn er Stian"
@@ -51,6 +53,8 @@ else:
     #funker
     send_msg()
 
+def thread_starter():
+    recv = thread()
            
            
      
