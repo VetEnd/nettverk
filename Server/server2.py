@@ -15,10 +15,11 @@ print("Do you wanna define the IP and Port yourself? Y/N")
 
 host_q = Queue()
 port_q = Queue()
-
+#or "y" or "Yes" or "YEs" or "YES" or "yes" or "yEs" or "yeS" or "YeS"
+# or "n" or "NO" or "No" or "no" or "nO"
 def check():
     check_input = input(str("Y/N: "))
-    if check_input == "Y" or "y" or "Yes" or "YEs" or "YES" or "yes" or "yEs" or "yeS" or "YeS":
+    if check_input == "Y":
         print("Choose the host ip address: ")
         host_input = input(str("IP address: "))
         port_q.put(host_input)
@@ -26,9 +27,7 @@ def check():
         print("Choose the host port: ")
         port_input = int (input(str("Port: ")))
         port_q.put(port_input)
-        
-
-    elif check_input == "N" or "n" or "NO" or "No" or "no" or "nO":
+    elif check_input == "N":
         print("Set host to localhost and port to 5000")
         host = "127.0.0.1"
         port = 5000
@@ -67,16 +66,19 @@ def listen_ok():
         e.set()
         
 def msg():
+    
     i = 1
     test = ok.get()
+    name = test.recv(1024).decode()
     while i <= 10:
         message = test.recv(1024).decode()
-        if message == "hei: bye": 
+        send_message = name +": " + message
+        if message == "exit": 
             my_socket.close()
             break
         else:
-            print(f"Received message: " + message)
-            broadcast(message)
+            print(f"Received message: " + send_message)
+            broadcast(send_message)
 
 #Mangler FIKS
 def broadcast(message):

@@ -19,6 +19,7 @@ my_socket.connect((host, port))
 conned = my_socket.recv(1024).decode()
 print(conned)
 
+name_send = my_socket.send(name.encode())
 #This part of the code will just be definitions of the chat bots
 
 class thread (threading.Thread):
@@ -35,7 +36,7 @@ class thread (threading.Thread):
 def send_msg():
     while True: 
         message_to_send = input()
-        message_navn = name + ": " + message_to_send
+        message_navn = message_to_send
         my_socket.send(message_navn.encode())
 
 if name == "Stian":
