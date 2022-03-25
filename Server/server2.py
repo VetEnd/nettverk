@@ -1,4 +1,6 @@
 #server.py
+from http import client
+from multiprocessing.connection import Client
 from queue import Queue
 import socket
 import threading
@@ -41,6 +43,7 @@ check()
 
 
 broadcast_list = []
+name_list = []
 
 host = host_q.get()
 port = port_q.get()
@@ -70,16 +73,22 @@ def msg():
     i = 1
     test = ok.get()
     name = test.recv(1024).decode()
+    name_list.append(name)
     while i <= 10:
-        message = test.recv(1024).decode()
-        send_message = name +": " + message
-        if message == "exit": 
-            test.close()
+        try:
+            message = test.recv(1024).decode()
+            send_message = name +": " + message
+            if message == "exit": 
+                test.close()
+                break
+            else:
+                print(f"Received message: " + send_message)
+                broadcast(send_message)
+        except socket.error:
+            print("Client timedout")
             break
-        else:
-            print(f"Received message: " + send_message)
-            broadcast(send_message)
-
+            
+        
 #Mangler FIKS
 def broadcast(message):
     for client in broadcast_list:
@@ -95,7 +104,7 @@ def meld():
             print("Liste med kommandoer (Kick, exit restart?)")
         elif hei =="--kick":
             print("Which of these would you like to kick?")
-            print(broadcast_list)
+            print(name_list)
             print("The next line you write will kick the person")
             kick_client = input(str(""))
         elif hei == "--exit":
@@ -135,6 +144,7 @@ print("Server started")
 
 #Mangler
 
+#Funker halveis, mulig Timeout ville vært bedre
 #A good program will check if clients are 
 #still connected before trying to interact with them. If they're not, or if you decide that they're 
 #taking too long to respond, you can remove them from the list of connections. 
