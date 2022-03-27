@@ -96,6 +96,7 @@ def broadcast(message):
             client.send(message.encode())
         except:
             broadcast_list.remove(client)
+
 def meld():
     i = 0
     while i <= 10:
