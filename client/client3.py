@@ -65,21 +65,24 @@ def recv1():
         message = my_socket.recv(1024).decode()
         print(message)
         test = re.findall(r'\w+', message)
-        res = [test[-1]]
+        res = test[-1]
         test2.put(res)
-
-if name == "Stian":
-    message = "Hei, mitt navn er Stian, jeg blir gjerne med på " + verb
-    my_socket.send(message.encode())
-    sleep(5)
-    message = "Ok, du er teit"
-    my_socket.send(message.encode())
-
 def thread_starter():
     recv = threading.Thread(target=recv1)
     recv.start()
 
     send = threading.Thread(target=send_msg)           
     send.start()
-    
-thread_starter()
+   
+if name == "Stian":
+    thread_starter()
+    test3 = str(test2.get())
+    message = "Hei, mitt navn er Stian, jeg blir gjerne med på " + str(test3)
+    my_socket.send(message.encode())
+    sleep(5)
+    message = "Ok, du er teit"
+    my_socket.send(message.encode())
+else:
+    thread_starter()
+ 
+
