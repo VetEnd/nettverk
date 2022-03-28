@@ -1,10 +1,13 @@
 #server.py
 from http import client
-from multiprocessing.connection import Client
+from multiprocessing.connection import Client, wait
 from queue import Queue
 import socket
 import threading
+from time import sleep
 from tkinter import Y
+import sys
+import os
 
 
 my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -55,7 +58,7 @@ my_socket.bind((host, port))
 
 ok = Queue()
 e = threading.Event()
-
+name_q = Queue()
 
 def listen_ok():
     i= 0
@@ -65,6 +68,9 @@ def listen_ok():
         conned = "Connected to the Server!"
         conn.send(conned.encode())
         broadcast_list.append(conn)
+        name = conn.recv(1024).decode()
+        name_q.put(name)
+       
         ok.put(conn)
         e.set()
         
@@ -72,18 +78,13 @@ def msg():
     
     i = 1
     test = ok.get()
-    name = test.recv(1024).decode()
-    name_list.append(name)
+    name = name_q.get()
     while i <= 10:
         try:
             message = test.recv(1024).decode()
             send_message = name +": " + message
-            if message == "exit": 
-                test.close()
-                break
-            else:
-                print(f"Received message: " + send_message)
-                broadcast(send_message)
+            print(f"Received message: " + send_message)
+            broadcast(send_message)
         except socket.error:
             print("Client timedout")
             break
@@ -110,10 +111,15 @@ def meld():
             kick_client = input(str(""))
         elif hei == "--exit":
             print("Kicking all clients, and shuting down")
-            #Kicker
+            message = "Server is shutting down you, will be disconnected automaticlly"
+            broadcast(message)
+            
+            message = "--exit"
+            broadcast(message)
+            sleep(5)
             print("All clients kicked")
             print("Shuting down..")
-            #Shutdown
+            os._exit(1)
         
         else:
             message = "Host: " + hei
